@@ -168,11 +168,7 @@ class DzongkhaFlashcards {
         
         let row;
         grouped[group].forEach((card, index) => {
-          if (index % 6 === 0) { // Start new row every 4 items
-            row = document.createElement("div");
-            row.className = "grid-row";
-            grid.appendChild(row);
-          }
+
           const item = document.createElement("div");
           item.className = "grid-item";
           item.innerHTML = `<span class="dzongkha"><strong>${card.dzongkha}</strong></span><span class="strong">${card.pronunciation}</span>`;
@@ -180,7 +176,7 @@ class DzongkhaFlashcards {
             item.innerHTML += `<em>${card.meaning}</em>`;
           }
           item.onclick = () => this.openModal(card.dzongkha, card.pronunciation);
-          row.appendChild(item);
+          grid.appendChild(item);
         });
         section.appendChild(grid);
         container.appendChild(section);
