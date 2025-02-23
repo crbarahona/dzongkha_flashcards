@@ -187,7 +187,7 @@ class DzongkhaFlashcards {
       document.getElementById("levelDisplay").innerText = "Level: " + this.levels[this.currentLevel];
       let letterProperties = this.flashcards[this.index];
       let phoneticProperties = Object.entries(letterProperties)
-      .filter(([key]) => !["dzongkha", "pronunciation", "example", "group"].includes(key))
+      .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
       .map(([key, value]) => `
         <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
           <strong>${key}:</strong> ${value}
