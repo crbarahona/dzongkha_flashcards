@@ -8,6 +8,7 @@ class DzongkhaFlashcards {
         manner: "The way air flows when pronouncing the sound (e.g., plosive, nasal, fricative).",
         tone: "Indicates whether the sound has a high, low, or neutral pitch."
       };
+      this.activeGroups = new Set(["consonant", "vowel", "number"]);
       this.flashcards = [...this.originalflashcards];
       this.index = 0;
       this.userInput = "";
@@ -16,17 +17,68 @@ class DzongkhaFlashcards {
       this.currentLevel = 0;
       this.setupModalClose();
       this.createShowAnswerButton();
-
-
+      this.createFilterButtons();
     }
 
-    shuffleFlashcards() {
-        this.flashcards = [...this.originalflashcards];
-        for (let i = this.flashcards.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+    createFilterButtons() {
+        const filterContainer = document.createElement("div");
+        filterContainer.id = "filter-container";
+        
+        ["consonant", "vowel", "number"].forEach(group => {
+          const button = document.createElement("button");
+          button.innerText = group.charAt(0).toUpperCase() + group.slice(1);
+          button.dataset.group = group;
+          button.classList.add("filter-button", "active");
+          button.onclick = () => this.toggleGroup(group, button);
+          filterContainer.appendChild(button);
+        });
+        document.body.insertBefore(filterContainer, document.getElementById("flashcard-container"));
+    }
+
+    toggleGroup(group, button) {
+        if (this.activeGroups.has(group)) {
+          this.activeGroups.delete(group);
+          button.classList.remove("active");
+          button.style.backgroundColor = "#ccc"; // Inactive state
+        } else {
+          this.activeGroups.add(group);
+          button.classList.add("active");
+          button.style.backgroundColor = "#007bff"; // Active state (blue)
+        }
+        this.filterFlashcards();
+      }
+ 
+      updateFlashcard() {
+        if (this.flashcards.length === 0) {
+          document.getElementById("flashcard").innerText = "?";
+          document.getElementById("hint").innerText = "";
+        } else {
+          const currentCard = this.flashcards[this.index];
+          document.getElementById("flashcard").innerText = currentCard.dzongkha;
+          this.renderHint(this);
         }
       }
+      
+      filterFlashcards() {
+        this.flashcards = this.originalflashcards.filter(card => this.activeGroups.has(card.group));
+        this.index = 0;
+    
+        // Shuffle only if in "memory" mode
+        if ((this.levels[this.currentLevel] === "memory") || (this.levels[this.currentLevel] === "hint")) {
+            this.shuffleFlashcards();
+        }
+    
+        this.updateFlashcard();
+    }
+    
+    // Fisher-Yates Shuffle Algorithm
+    shuffleFlashcards() {
+        for (let i = this.flashcards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.flashcards[i], this.flashcards[j]] = [this.flashcards[j], this.flashcards[i]];
+        }
+    }
+    
 
     setupModalClose() {
         const modal = document.getElementById("modal");
@@ -36,7 +88,45 @@ class DzongkhaFlashcards {
           }
         });
       }
-
+      renderHint(app) {
+        const currentCard = this.flashcards[this.index];
+        let letter = currentCard.dzongkha;
+        document.getElementById("hint").innerText = `Hint: ${currentCard.group}`;
+        let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
+        let phoneticProperties = Object.entries(letterProperties)
+          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
+          .map(([key, value]) => `
+            <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
+              <strong>${key}:</strong> ${value}
+              <span class="tooltip">${this.phoneticDefinitions[key] || ""}</span>
+            </span>`)
+          .join("<br>");
+          if (this.currentLevel > 0) {
+            document.getElementById("hint").innerHTML = "Group: " + this.flashcards[this.index].group + "<br><br>" +
+            phoneticProperties;
+          }
+          if (this.currentLevel === 1) {
+            document.getElementById("hint").innerHTML = "Pronunciation: " + this.flashcards[this.index].pronunciation + "<br><br>";
+            if (this.flashcards[this.index].example !== undefined) {
+              document.getElementById("hint").innerHTML += "Like in: " + this.flashcards[this.index].example + "<br><br>";
+            }
+            if (this.flashcards[this.index].meaning !== undefined) {
+              document.getElementById("hint").innerHTML += "Meaning: " + this.flashcards[this.index].meaning + "<br><br>";
+            }
+              document.getElementById("hint").innerHTML += phoneticProperties;
+            document.getElementById("userInput").classList.add("hidden");
+            document.getElementById("check").classList.add("hidden");
+          } else if (this.currentLevel === 2) {
+            document.getElementById("hint").innerHTML = "Group: " + this.flashcards[this.index].group + "<br><br>" +
+            phoneticProperties;;
+            document.getElementById("userInput").classList.remove("hidden");
+            document.getElementById("check").classList.remove("hidden");
+          } else {
+            document.getElementById("hint").innerText = "";
+            document.getElementById("userInput").classList.remove("hidden");
+            document.getElementById("check").classList.remove("hidden");
+          }
+        }
       openModal(letter, pronunciation) {
         const modal = document.getElementById("modal");
         let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
@@ -142,6 +232,7 @@ class DzongkhaFlashcards {
   
     checkAnswer() {
       if (this.currentLevel > 1) { // Disable checking in overview and learning modes
+        if (this.userInput)
         if (this.userInput.trim().toLowerCase() === this.flashcards[this.index].pronunciation.toLowerCase()) {
           this.feedback = "✅ Correct!";
         } else {
