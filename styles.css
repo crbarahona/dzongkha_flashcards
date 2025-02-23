@@ -1,0 +1,243 @@
+/* General Layout */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* Overview Section */
+#overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#overview h2, 
+#overview > div {
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+/* Grid Layout */
+.grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Grid Rows - Proper alignment */
+.grid-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Square Card-like Grid Items */
+.grid-item {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Flashcard Styles */
+.flashcard-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.flashcard {
+    font-size: 50px;
+    padding: 30px;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.flashcard:hover {
+    transform: scale(1.05);
+}
+
+/* Chevron Buttons */
+.chevron {
+    background: none;
+    border: none;
+    font-size: 35px;
+    cursor: pointer;
+    padding: 10px;
+    color: #495057;
+    transition: color 0.2s;
+}
+
+.chevron:hover {
+    color: #343a40;
+}
+
+/* Modal - Centered Enlarged Character Display */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Content Box - Ensures Centering */
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    min-width: 250px;
+    max-width: 90%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* Close Button */
+.close {
+    font-size: 30px;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+
+/* Input and Check Button */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+#userInput {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background: white;
+    font-size: 16px;
+}
+
+#check {
+    width: 120px;
+    font-size: 16px;
+}
+
+/* Hide elements when not in use */
+.hidden {
+    display: none !important;
+}
+
+/* Level Display */
+#levelDisplay {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+/* Hint */
+#hint {
+    font-size: 16px;
+    font-weight: bold;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+/* Button Styles */
+button {
+    margin: 10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Feedback */
+.feedback {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 600px) {
+    .flashcard {
+        width: 180px;
+        height: 180px;
+        font-size: 40px;
+    }
+    .chevron {
+        font-size: 28px;
+    }
+    .grid {
+        max-width: 100%;
+    }
+    .grid-row {
+        width: 100%;
+        justify-content: center;
+    }
+    .grid-item {
+        width: 100px;
+        height: 100px;
+    }
+}

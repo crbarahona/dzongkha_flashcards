@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dzongkha Flashcards</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Dzongkha Flashcards</h1>
+
+    <p id="levelDisplay">Level: Overview</p>
+    <button id="changeLevel">Change Level</button>
+
+    <!-- Overview Grid Section -->
+    <div id="overview" class="overview-container"></div>
+
+    <!-- Flashcard Section -->
+    <div id="flashcard-container" class="hidden">
+        <div class="flashcard-wrapper">
+            <button id="prev" class="chevron">◀</button>
+            <div class="flashcard" id="flashcard">?</div>
+            <button id="next" class="chevron">▶</button>
+        </div>
+
+        <p id="hint"></p>
+
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Enter pronunciation" />
+            <button id="check">Check</button>
+        </div>
+
+        <p class="feedback" id="feedback"></p>
+    </div>
+
+    <!-- Modal for Enlarged Letter Display -->
+    <div id="modal" class="modal hidden" style="display: hidden">
+        <div class="modal-box">
+            <span class="close" onclick="app.closeModal()">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+    
+    <script src="flashcards.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+</html>
