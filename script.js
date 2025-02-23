@@ -73,7 +73,7 @@ class DzongkhaFlashcards {
   
     changeLevel() {
       this.currentLevel = (this.currentLevel + 1) % this.levels.length;
-      if (this.levels[this.currentLevel] === "memory" || this.levels[this.currentLevel] === "hint") {
+      if ((this.levels[this.currentLevel] === "memory") || (this.levels[this.currentLevel] === "hint")) {
         this.shuffleFlashcards();
       } else {
         this.flashcards = [...this.originalflashcards];
@@ -178,6 +178,7 @@ class DzongkhaFlashcards {
         
         if (this.currentLevel === 1) {
           document.getElementById("hint").innerHTML = "Pronunciation: " + this.flashcards[this.index].pronunciation + "<br>" +
+          "Like in: " + this.flashcards[this.index].example + "<br>" +
           phoneticProperties;
           document.getElementById("userInput").classList.add("hidden");
           document.getElementById("check").classList.add("hidden");
