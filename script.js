@@ -42,16 +42,34 @@ class DzongkhaFlashcards {
         let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
         let phoneticProperties = Object.entries(letterProperties)
           .filter(([key]) => !["dzongkha", "pronunciation", "example", "group"].includes(key))
-          .map(([key, value]) => `<strong title='${this.phoneticDefinitions[key] || ""}'>${key}:</strong> ${value}`)
+          .map(([key, value]) => `
+            <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
+              <strong>${key}:</strong> ${value}
+              <span class="tooltip">${this.phoneticDefinitions[key] || ""}</span>
+            </span>`)
           .join("<br>");
         
-        document.getElementById("modal-content").innerHTML = `<strong style="font-size: 80px;">${letter}</strong><br>
-        <span style="font-size: 24px;">${pronunciation}</span><br>
-        <span style="font-size: 16px;">Example: ${letterProperties.example}</span><br><br>
-        ${phoneticProperties}`;
+        document.getElementById("modal-content").innerHTML = `
+          <strong style="font-size: 80px;">${letter}</strong><br>
+          <span style="font-size: 24px;">${pronunciation}</span><br>
+          <span style="font-size: 16px;">Example: ${letterProperties.example}</span><br><br>
+          ${phoneticProperties}`;
+        
         modal.style.display = "block";
         modal.classList.remove("hidden");
       }
+      
+      showTooltip(event, key) {
+        // Hide any existing tooltips
+        document.querySelectorAll(".tooltip").forEach(t => t.classList.remove("visible"));
+      
+        // Show the clicked tooltip
+        const tooltip = event.target.querySelector(".tooltip");
+        if (tooltip) {
+          tooltip.classList.add("visible");
+        }
+      }
+      
 
   closeModal() {
     const modal = document.getElementById("modal");
@@ -162,7 +180,11 @@ class DzongkhaFlashcards {
       let letterProperties = this.flashcards[this.index];
       let phoneticProperties = Object.entries(letterProperties)
       .filter(([key]) => !["dzongkha", "pronunciation", "example", "group"].includes(key))
-      .map(([key, value]) => `<strong title='${this.phoneticDefinitions[key] || ""}'>${key}:</strong> ${value}`)
+      .map(([key, value]) => `
+        <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
+          <strong>${key}:</strong> ${value}
+          <span class="tooltip">${this.phoneticDefinitions[key] || ""}</span>
+        </span>`)
       .join("<br>");
 
       if (this.currentLevel === 0) {
@@ -209,6 +231,12 @@ class DzongkhaFlashcards {
       app.render();
     });
     document.getElementById("changeLevel").addEventListener("click", () => app.changeLevel());
+    // Hide tooltips when clicking elsewhere
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".tooltip-container")) {
+        document.querySelectorAll(".tooltip").forEach(t => t.classList.remove("visible"));
+        }
+    });
 
     app.render();
   };
