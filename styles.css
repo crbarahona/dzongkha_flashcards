@@ -90,7 +90,7 @@ header {
     text-align: center;
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
     font-size: 24px;
-    font-weight: bold;
+    font-weight: normal;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -99,6 +99,15 @@ header {
     height: 100px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+}
+
+.grid-item .dzongkha {
+    font-size: 2em;
+    color: #6c757d;
+}
+
+.grid-item .strong {
+    font-weight: bold;
 }
 
 .grid-item:hover {

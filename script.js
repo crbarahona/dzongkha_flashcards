@@ -41,7 +41,7 @@ class DzongkhaFlashcards {
         const modal = document.getElementById("modal");
         let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
         let phoneticProperties = Object.entries(letterProperties)
-          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group"].includes(key))
+          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
           .map(([key, value]) => `
             <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
               <strong>${key}:</strong> ${value}
@@ -51,8 +51,17 @@ class DzongkhaFlashcards {
         
         document.getElementById("modal-content").innerHTML = `
           <strong style="font-size: 80px;">${letter}</strong><br>
-          <span style="font-size: 24px;">${pronunciation}</span><br>
-          <span style="font-size: 16px;">Example: ${letterProperties.example}</span><br><br>
+          <span style="font-size: 24px;">${pronunciation}</span><br>`;
+        if (letterProperties.example !== undefined) {
+
+            document.getElementById("modal-content").innerHTML += `
+          <span style="font-size: 16px;">Like in: ${letterProperties.example}</span>`;
+        }
+        if (letterProperties.meaning !== undefined) {
+          document.getElementById("modal-content").innerHTML += `
+          <span style="font-size: 16px;">Meaning: ${letterProperties.meaning}</span>`;
+        }
+        document.getElementById("modal-content").innerHTML += `<br><br>
           ${phoneticProperties}`;
         
         modal.style.display = "block";
@@ -166,7 +175,10 @@ class DzongkhaFlashcards {
           }
           const item = document.createElement("div");
           item.className = "grid-item";
-          item.innerHTML = `<strong>${card.dzongkha}</strong><br>${card.pronunciation}`;
+          item.innerHTML = `<span class="dzongkha"><strong>${card.dzongkha}</strong></span><span class="strong">${card.pronunciation}</span>`;
+          if (card.meaning !== undefined) {
+            item.innerHTML += `<em>${card.meaning}</em>`;
+          }
           item.onclick = () => this.openModal(card.dzongkha, card.pronunciation);
           row.appendChild(item);
         });
@@ -199,13 +211,18 @@ class DzongkhaFlashcards {
         document.getElementById("feedback").innerText = this.feedback;
         
         if (this.currentLevel === 1) {
-          document.getElementById("hint").innerHTML = "Pronunciation: " + this.flashcards[this.index].pronunciation + "<br>" +
-          "Like in: " + this.flashcards[this.index].example + "<br>" +
-          phoneticProperties;
+          document.getElementById("hint").innerHTML = "Pronunciation: " + this.flashcards[this.index].pronunciation + "<br><br>";
+          if (this.flashcards[this.index].example !== undefined) {
+            document.getElementById("hint").innerHTML += "Like in: " + this.flashcards[this.index].example + "<br><br>";
+          }
+          if (this.flashcards[this.index].meaning !== undefined) {
+            document.getElementById("hint").innerHTML += "Meaning: " + this.flashcards[this.index].meaning + "<br><br>";
+          }
+            document.getElementById("hint").innerHTML += phoneticProperties;
           document.getElementById("userInput").classList.add("hidden");
           document.getElementById("check").classList.add("hidden");
         } else if (this.currentLevel === 2) {
-          document.getElementById("hint").innerHTML = "Group: " + this.flashcards[this.index].group + "<br>" +
+          document.getElementById("hint").innerHTML = "Group: " + this.flashcards[this.index].group + "<br><br>" +
           phoneticProperties;;
           document.getElementById("userInput").classList.remove("hidden");
           document.getElementById("check").classList.remove("hidden");
