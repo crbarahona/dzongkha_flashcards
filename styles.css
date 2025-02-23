@@ -6,6 +6,24 @@ body {
     padding: 20px;
 }
 
+.overview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    justify-content: center;
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .overview-container {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+}
+
+
 /* Overview Section */
 #overview {
     display: flex;

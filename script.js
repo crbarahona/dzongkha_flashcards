@@ -73,7 +73,7 @@ class DzongkhaFlashcards {
   
     changeLevel() {
       this.currentLevel = (this.currentLevel + 1) % this.levels.length;
-      if (this.levels[this.currentLevel] === "memory") {
+      if (this.levels[this.currentLevel] === "memory" || this.levels[this.currentLevel] === "hint") {
         this.shuffleFlashcards();
       } else {
         this.flashcards = [...this.originalflashcards];
@@ -135,7 +135,7 @@ class DzongkhaFlashcards {
   
       Object.keys(grouped).forEach(group => {
         const section = document.createElement("div");
-        section.innerHTML = `<h3>${group}</h3>`;
+        section.innerHTML = `<h3>${group}s</h3>`;
         const grid = document.createElement("div");
         grid.className = "grid";
         
