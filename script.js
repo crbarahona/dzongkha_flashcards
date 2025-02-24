@@ -18,11 +18,35 @@ class DzongkhaFlashcards {
       this.setupModalClose();
       this.createShowAnswerButton();
       this.createFilterButtons();
+
     }
+
+    playAudio(audiopath) {
+
+        if (audiopath) {
+            let audio = new Audio(audiopath);
+            audio.volume = 0.5;
+            audio.play();
+        }
+    }
+
+    adjustFontSize() {
+        const gridItems = document.querySelectorAll(".grid-item span");
+        gridItems.forEach(span => {
+          if (span.textContent.length > 7) {
+            let fontSize = 24;
+            fontSize -=  2;
+            span.style.fontSize = fontSize + "px";
+          }
+        });
+      }
 
     createFilterButtons() {
         const filterContainer = document.createElement("div");
         filterContainer.id = "filter-container";
+        let filterTitle = document.createElement("h2");
+        filterTitle.innerText = "Filter by Group";
+        filterContainer.appendChild(filterTitle);
         
         ["consonant", "vowel", "number"].forEach(group => {
           const button = document.createElement("button");
@@ -94,7 +118,7 @@ class DzongkhaFlashcards {
         document.getElementById("hint").innerText = `Hint: ${currentCard.group}`;
         let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
         let phoneticProperties = Object.entries(letterProperties)
-          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
+          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning", "audio"].includes(key))
           .map(([key, value]) => `
             <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
               <strong>${key}:</strong> ${value}
@@ -131,7 +155,7 @@ class DzongkhaFlashcards {
         const modal = document.getElementById("modal");
         let letterProperties = this.flashcards.find(card => card.dzongkha === letter);
         let phoneticProperties = Object.entries(letterProperties)
-          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
+          .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning", "audio"].includes(key))
           .map(([key, value]) => `
             <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
               <strong>${key}:</strong> ${value}
@@ -153,6 +177,10 @@ class DzongkhaFlashcards {
         }
         document.getElementById("modal-content").innerHTML += `<br><br>
           ${phoneticProperties}`;
+        if (letterProperties.audio) {
+            document.getElementById("modal-content").innerHTML += `<br><br>
+            <button class='audio-btn' onclick='app.playAudio("${letterProperties.audio}")'>🔊</button>`;
+        }
         
         modal.style.display = "block";
         modal.classList.remove("hidden");
@@ -254,6 +282,10 @@ class DzongkhaFlashcards {
       Object.keys(grouped).forEach(group => {
         const section = document.createElement("div");
         section.innerHTML = `<h3>${group}s</h3>`;
+        if (group === "number") {
+            let credit_text = "For a good video guide on how to speak numbers in Dzongkha, check out <a href='https://www.youtube.com/watch?v=OmWsdhU1eew' target='_blank'>How to count in Dzongkha (Bhutanese)</a>. Audio credit: JamJam";
+            section.innerHTML += `<p>${credit_text}</p>`;
+        }
         const grid = document.createElement("div");
         grid.className = "grid";
         
@@ -278,7 +310,7 @@ class DzongkhaFlashcards {
       document.getElementById("levelDisplay").innerText = "Level: " + this.levels[this.currentLevel];
       let letterProperties = this.flashcards[this.index];
       let phoneticProperties = Object.entries(letterProperties)
-      .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning"].includes(key))
+      .filter(([key]) => !["dzongkha", "pronunciation", "example", "group", "meaning", "audio"].includes(key))
       .map(([key, value]) => `
         <span class="tooltip-container" onclick="app.showTooltip(event, '${key}')">
           <strong>${key}:</strong> ${value}
@@ -343,4 +375,5 @@ class DzongkhaFlashcards {
     });
 
     app.render();
+    app.adjustFontSize();
   };
